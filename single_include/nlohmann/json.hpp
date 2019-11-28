@@ -1806,6 +1806,17 @@ JSON_HEDLEY_DIAGNOSTIC_POP
             return ej_pair.second == j;                                                         \
         });                                                                                     \
         e = ((it != std::end(m)) ? it : std::begin(m))->first;                                  \
+    }                                                                                           \
+    inline std::ostream& operator<<(std::ostream &os,const ENUM_TYPE& e)                        \
+    {																						    \
+        static_assert(std::is_enum<ENUM_TYPE>::value, #ENUM_TYPE " must be an enum!");          \
+        static const std::pair<ENUM_TYPE, std::string> m[] = __VA_ARGS__;                       \
+        auto it = std::find_if(std::begin(m), std::end(m),                                      \
+                               [e](const std::pair<ENUM_TYPE, std::string>& es_pair) -> bool    \
+        {                                                                                       \
+            return es_pair.first == e;                                                          \
+        });                                                                                     \
+        return os << ((it != std::end(m)) ? it->second : "");                                   \
     }
 
 // Ugly macros to avoid uglier copy-paste when specializing basic_json. They
